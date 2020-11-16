@@ -38,13 +38,21 @@ public class LoginController {
                         @RequestParam("password") String password,
                         Map<String,Object> map, HttpSession session){
         User user=userMapper.selectUser(username);
+        try {
+
+
         if (Objects.equals(password, user.getPassword())) {
             //重定向防止表单重复提交
             session.setAttribute("loginUser",username);
             return "redirect:/main.html";
-        }
+        }else {
         map.put("msg","用户名密码错误");
-        return "login";
+        return "login";}
+        }catch(Exception e){
+            map.put("msg","用户名密码错误");
+            return "login";
+
+        }
     }
 
     @PostMapping(value = "/register")

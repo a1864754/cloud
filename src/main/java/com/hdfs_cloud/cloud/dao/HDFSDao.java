@@ -97,7 +97,7 @@ public class HDFSDao {
         String path1="/user/cloud/user/" + username+"/"+filename;
         Path HDFSPath = new Path(path1);
         // 目标路径
-        Path localPath = new Path("D:\\Downloads");
+        Path localPath = new Path("/cloud/data/");
         System.out.println(HDFSPath);
 
         // 调用文件系统的文件复制方法，第一个参数是否删除原文件true为删除，默认为false

@@ -1,30 +1,20 @@
 package com.hdfs_cloud.cloud.controller;
 
 import com.hdfs_cloud.cloud.dao.Upload;
-import com.hdfs_cloud.cloud.entities.HDFS;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.shell.find.Result;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerInterceptor;
 import com.hdfs_cloud.cloud.dao.HDFSDao;
-import org.apache.hadoop.fs.FileSystem;
-import javax.servlet.ServletOutputStream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Controller
 public class HDFSController implements HandlerInterceptor {
@@ -160,24 +150,64 @@ public class HDFSController implements HandlerInterceptor {
 
 
     //下载文件
-    @PostMapping("/download/{filename}")
+    @RequestMapping("/download/{filename}")
+    //@PostMapping("/download/{filename}")
     @ResponseBody
-    public String  downloadFile(@PathVariable("filename") String path,HttpServletRequest request) throws Exception {
-       try {
-           Object user = request.getSession().getAttribute("loginUser");
+    public void downloadFile(@PathVariable("filename") String path, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Object user = request.getSession().getAttribute("loginUser");
 
         String username = (String)user;
         HDFSDao.downloadFile(path,username);
-        return "下载成功";
-       }catch (Exception e){
-           return "下载失败";
-       }
+        String downloadFilePath = "/cloud/data/";//被下载的文件在服务器中的路径,
+        String fileName = path;//被下载文件的名称
+        File file = new File(downloadFilePath+fileName);
+        System.out.println("file:"+file);
+        if (file.exists()) {
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            try {
+                fis = new FileInputStream(file);
+                bis = new BufferedInputStream(fis);
+                OutputStream outputStream = response.getOutputStream();
+                int i = bis.read(buffer);
+                while (i != -1) {
+                    outputStream.write(buffer, 0, i);
+                    i = bis.read(buffer);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+    }
+
+
        
 
     }
 
 
-}
+
 
 
 

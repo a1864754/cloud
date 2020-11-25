@@ -29,7 +29,7 @@
 
     <groupId>com.hdfs_cloud</groupId>
     <artifactId>cloud</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
     <name>cloud</name>
     <description>Demo project for Spring Boot</description>
 

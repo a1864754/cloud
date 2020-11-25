@@ -22,11 +22,11 @@ import java.util.UUID;
 @Repository
 public class HDFSDao {
     static Configuration conf = new Configuration();
-    static String hdfsPath = "hdfs://49.232.221.239:9000/user/cloud/user";
+    static String hdfsPath = "hdfs://172.23.0.8:9000/user/cloud/user";
 
     public static void init() {
         try {
-            conf.set("fs.defaultFS", "49.232.221.239:9000");
+            conf.set("fs.defaultFS", "172.23.0.8:9000");
             conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
         } catch (Exception e) {
             System.out.println("你似乎没有运行hadoop哦！！");

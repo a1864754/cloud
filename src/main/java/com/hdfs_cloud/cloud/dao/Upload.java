@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Upload {
     public static final String FS_DEFAULT_FS = "fs.defaultFS";
-    public static final String HDFS_HOST = "hdfs://49.232.221.239:9000";
+    public static final String HDFS_HOST = "hdfs://172.23.0.8:9000";
     public static final String CROSS_PLATFORM = "mapreduce.app-submission.cross-platform";
 
 
